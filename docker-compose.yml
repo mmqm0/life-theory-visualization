@@ -1,0 +1,168 @@
+version: '3.8'
+
+services:
+  # PostgreSQL 数据库 - 用于结构化数据和向量存储
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: life-theory-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-life_theory_db}
+      POSTGRES_USER: ${POSTGRES_USER:-admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-LifeTheory@2024}
+    ports:
+      - "25433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d life_theory_db"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - life-theory-network
+
+  # Neo4j 图数据库 - 用于知识图谱存储和查询
+  neo4j:
+    image: neo4j:5.16.0-community
+    container_name: life-theory-neo4j
+    environment:
+      NEO4J_AUTH: ${NEO4J_USER:-neo4j}/${NEO4J_PASSWORD:-LifeTheory@Neo4j2024}
+      NEO4J_dbms_memory_pagecache_size: 512M
+      NEO4J_dbms_memory_heap_max__size: 1G
+      NEO4J_ACCEPT_LICENSE_AGREEMENT: "yes"
+    ports:
+      - "19474:7474"
+      - "19687:7687"
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+      - neo4j_import:/import
+      - neo4j_plugins:/plugins
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:7474 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - life-theory-network
+
+  # Redis - 用于缓存和会话管理
+  redis:
+    image: redis:7-alpine
+    container_name: life-theory-redis
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-LifeTheory@Redis2024}
+    ports:
+      - "36379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --requirepass ${REDIS_PASSWORD:-LifeTheory@Redis2024}
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a ${REDIS_PASSWORD:-LifeTheory@Redis2024} ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - life-theory-network
+
+  # pgAdmin - PostgreSQL管理工具
+  pgadmin:
+    image: dpage/pgadmin4:8.5
+    container_name: life-theory-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: ${POSTGRES_PASSWORD:-LifeTheory@2024}
+    ports:
+      - "35050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    networks:
+      - life-theory-network
+
+  # 后端服务 (Node.js/Express)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: life-theory-backend
+    environment:
+      - NODE_ENV=${APP_ENV:-development}
+      - PORT=${APP_PORT:-3000}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=${POSTGRES_DB:-life_theory_db}
+      - POSTGRES_USER=${POSTGRES_USER:-admin}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-LifeTheory@2024}
+      - NEO4J_HOST=neo4j
+      - NEO4J_PORT=7687
+      - NEO4J_USER=${NEO4J_USER:-neo4j}
+      - NEO4J_PASSWORD=${NEO4J_PASSWORD:-LifeTheory@Neo4j2024}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-LifeTheory@Redis2024}
+      - DEEPSEEK_API_URL=${DEEPSEEK_API_URL:-https://api.deepseek.com}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY:-sk-cc0ab985359443f4a607dd81b38538ff}
+      - ALIBABA_BAILIAN_API_KEY=${ALIBABA_BAILIAN_API_KEY:-sk-28ec47f5eff6404aa98329a9f56ada05}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY:-AIzaSyCJMP4oKgHOTqr1PAOyUuS6V3shVsvqUHs}
+      - GOOGLE_CSE_ID=${GOOGLE_CSE_ID:-b78151487f06e4be4}
+      - SERPAPI_KEY=${SERPAPI_KEY:-2ef9b3b7bf33278d14190008fc145c04ac6a94eef009f7e59c91dbb9ad4e3a77}
+      - JWT_SECRET=${JWT_SECRET:-LifeTheory_JWT_Secret_Key_2024_Complex_String}
+    ports:
+      - "8080:3000"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+      neo4j:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - life-theory-network
+
+  # 前端服务 (React/Vue)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: life-theory-frontend
+    environment:
+      - NODE_ENV=${APP_ENV:-development}
+      - REACT_APP_API_URL=http://localhost:8080/api
+      - REACT_APP_GOOGLE_API_KEY=${GOOGLE_API_KEY:-AIzaSyCJMP4oKgHOTqr1PAOyUuS6V3shVsvqUHs}
+      - REACT_APP_GOOGLE_CSE_ID=${GOOGLE_CSE_ID:-b78151487f06e4be4}
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - life-theory-network
+
+volumes:
+  postgres_data:
+    driver: local
+  neo4j_data:
+    driver: local
+  neo4j_logs:
+    driver: local
+  neo4j_import:
+    driver: local
+  neo4j_plugins:
+    driver: local
+  redis_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+
+networks:
+  life-theory-network:
+    driver: bridge

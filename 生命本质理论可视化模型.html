@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生命本质理论完整体系框架 - 可视化模型</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        :root {
+            --primary: #1a1a2e;
+            --secondary: #16213e;
+            --accent: #00d9ff;
+            --accent2: #ff6b6b;
+            --accent3: #4ecdc4;
+            --gold: #ffd93d;
+            --text-light: #e8e8e8;
+            --text-dim: #a0a0a0;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, #0c0c1d 0%, #1a1a2e 50%, #0f0f23 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--accent);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 15s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(180deg, rgba(0,217,255,0.1) 0%, transparent 100%);
+            border-bottom: 1px solid rgba(0,217,255,0.2);
+        }
+
+        h1 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 2.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--gold) 50%, var(--accent3) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            font-weight: 300;
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            padding: 14px 32px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(0,217,255,0.3);
+            border-radius: 30px;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .nav-tab:hover {
+            background: rgba(0,217,255,0.15);
+            border-color: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,217,255,0.2);
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent3) 100%);
+            border-color: transparent;
+            color: #000;
+            font-weight: 700;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.6s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(0,217,255,0.4);
+            box-shadow: 0 20px 50px rgba(0,217,255,0.15);
+        }
+
+        .card h3 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card h3::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.3); }
+        }
+
+        .card p {
+            line-height: 1.8;
+            color: var(--text-dim);
+            font-size: 0.98rem;
+        }
+
+        .entropy-stage {
+            position: relative;
+            padding: 40px;
+            background: linear-gradient(145deg, rgba(22,33,62,0.9) 0%, rgba(26,26,46,0.9) 100%);
+            border-radius: 24px;
+            border: 2px solid rgba(0,217,255,0.2);
+            margin: 30px 0;
+            overflow: hidden;
+        }
+
+        .entropy-stage::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent2), var(--accent), var(--accent3), var(--gold));
+        }
+
+        .stage-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .stage-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .stage-badge {
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .stage-1 .stage-badge { background: linear-gradient(135deg, #ff6b6b, #ff8e8e); }
+        .stage-2 .stage-badge { background: linear-gradient(135deg, #4ecdc4, #6ee7de); }
+        .stage-3 .stage-badge { background: linear-gradient(135deg, #00d9ff, #5ae1ff); }
+        .stage-4 .stage-badge { background: linear-gradient(135deg, #ffd93d, #ffe066); }
+
+        .stage-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .stage-item {
+            background: rgba(255,255,255,0.05);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .stage-item h4 {
+            color: var(--gold);
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .stage-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 40px 0;
+        }
+
+        .stage-btn {
+            padding: 12px 24px;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(0,217,255,0.3);
+            border-radius: 10px;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .stage-btn:hover, .stage-btn.active {
+            background: rgba(0,217,255,0.2);
+            border-color: var(--accent);
+        }
+
+        .entropy-visual {
+            height: 120px;
+            background: linear-gradient(90deg, rgba(255,107,107,0.3) 0%, rgba(78,205,196,0.3) 50%, rgba(0,217,255,0.3) 100%);
+            border-radius: 60px;
+            position: relative;
+            margin: 30px 0;
+            overflow: hidden;
+        }
+
+        .entropy-marker {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            background: var(--accent);
+            border-radius: 50%;
+            box-shadow: 0 0 30px var(--accent);
+            transition: left 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .entropy-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+        }
+
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .scenario-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+        }
+
+        .scenario-card:hover {
+            transform: scale(1.03);
+            border-color: var(--accent3);
+            box-shadow: 0 15px 40px rgba(78,205,196,0.2);
+        }
+
+        .scenario-card.selected {
+            border-color: var(--accent);
+            background: rgba(0,217,255,0.1);
+        }
+
+        .scenario-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .scenario-detail {
+            margin-top: 30px;
+            padding: 30px;
+            background: rgba(0,217,255,0.08);
+            border-radius: 16px;
+            border: 1px solid rgba(0,217,255,0.3);
+            display: none;
+        }
+
+        .scenario-detail.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .timeline {
+            position: relative;
+            padding: 30px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--accent2), var(--accent), var(--accent3), var(--gold));
+        }
+
+        .timeline-item {
+            display: flex;
+            justify-content: flex-end;
+            padding-right: 50%;
+            position: relative;
+            margin-bottom: 40px;
+        }
+
+        .timeline-item:nth-child(even) {
+            justify-content: flex-start;
+            padding-right: 0;
+            padding-left: 50%;
+        }
+
+        .timeline-content {
+            background: rgba(255,255,255,0.06);
+            padding: 25px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 450px;
+            position: relative;
+            border: 1px solid rgba(0,217,255,0.2);
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-right: 30px;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-left: 30px;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            background: var(--accent);
+            border-radius: 50%;
+            border: 4px solid var(--primary);
+            z-index: 2;
+        }
+
+        .timeline-item:nth-child(2) .timeline-dot { background: var(--accent3); }
+        .timeline-item:nth-child(3) .timeline-dot { background: var(--gold); }
+        .timeline-item:nth-child(4) .timeline-dot { background: var(--accent2); }
+
+        .evolution-path {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            margin: 40px 0;
+        }
+
+        @media (max-width: 768px) {
+            .evolution-path {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .evolution-branch {
+            background: linear-gradient(145deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
+            border-radius: 20px;
+            padding: 35px;
+            border: 2px solid rgba(0,217,255,0.15);
+        }
+
+        .branch-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 25px;
+            color: var(--accent3);
+        }
+
+        .branch-title.right {
+            color: var(--gold);
+        }
+
+        .branch-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .branch-step {
+            background: rgba(255,255,255,0.05);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 3px solid var(--accent);
+            transition: all 0.3s ease;
+        }
+
+        .branch-step:hover {
+            background: rgba(0,217,255,0.1);
+            transform: translateX(10px);
+        }
+
+        .branch-title.right ~ .branch-steps .branch-step:hover {
+            transform: translateX(-10px);
+        }
+
+        .branch-title.right ~ .branch-steps .branch-step {
+            border-left: none;
+            border-right: 3px solid var(--gold);
+        }
+
+        .system-diagram {
+            background: linear-gradient(145deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.02) 100%);
+            border-radius: 24px;
+            padding: 50px;
+            margin: 40px 0;
+            border: 2px solid rgba(0,217,255,0.2);
+        }
+
+        .diagram-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .diagram-node {
+            background: linear-gradient(145deg, rgba(0,217,255,0.15) 0%, rgba(0,217,255,0.05) 100%);
+            padding: 25px 35px;
+            border-radius: 16px;
+            border: 2px solid var(--accent);
+            text-align: center;
+            font-weight: 600;
+            min-width: 140px;
+        }
+
+        .diagram-arrow {
+            font-size: 2rem;
+            color: var(--accent);
+        }
+
+        .conclusion {
+            background: linear-gradient(135deg, rgba(0,217,255,0.1) 0%, rgba(78,205,196,0.1) 50%, rgba(255,217,61,0.1) 100%);
+            border-radius: 24px;
+            padding: 40px;
+            margin: 40px 0;
+            border: 2px solid rgba(255,217,61,0.3);
+        }
+
+        .conclusion h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--gold);
+        }
+
+        .conclusion-point {
+            background: rgba(255,255,255,0.05);
+            padding: 20px 25px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--accent);
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(0,217,255,0.1);
+            margin-top: 60px;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            .timeline::before { left: 20px; }
+            .timeline-item, .timeline-item:nth-child(even) {
+                padding-left: 60px;
+                padding-right: 0;
+                justify-content: flex-start;
+            }
+            .timeline-content, .timeline-item:nth-child(odd) .timeline-content, .timeline-item:nth-child(even) .timeline-content {
+                margin-left: 0;
+                margin-right: 0;
+                width: 100%;
+            }
+            .timeline-dot { left: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+
+    <header>
+        <h1>生命本质理论完整体系框架</h1>
+        <p class="subtitle">基于生命熵变全程推演的可视化模型</p>
+    </header>
+
+    <div class="container">
+        <div class="nav-tabs">
+            <div class="nav-tab active" data-section="axiom">核心公理</div>
+            <div class="nav-tab" data-section="entropy">熵变推演</div>
+            <div class="nav-tab" data-section="evolution">内外演化</div>
+            <div class="nav-tab" data-section="scenario">场景验证</div>
+            <div class="nav-tab" data-section="closure">体系闭环</div>
+        </div>
+
+        <div class="section active" id="axiom">
+            <div class="grid-layout">
+                <div class="card" style="grid-column: span 2;">
+                    <h3>🔮 生命本质核心公理</h3>
+                    <p style="font-size: 1.2rem; color: var(--gold); line-height: 2;">
+                        <strong>生命的唯一底层本质：</strong>主动适配外部环境以求稳定存在，并以一切方式完成自身存在形态的长久延续。
+                    </p>
+                </div>
+                <div class="card">
+                    <h3>🌍 环境自适应</h3>
+                    <p><strong>存续手段</strong>——通过感知环境变量（温度、资源、风险等），自主调整自身结构、代谢、行为或逻辑，抵消环境波动带来的熵增冲击，维持自身有序性。</p>
+                    <p style="margin-top: 15px; color: var(--accent3);">本质是"负熵摄入与熵增抵消的动态适配"</p>
+                </div>
+                <div class="card">
+                    <h3>♾️ 存在延续</h3>
+                    <p><strong>终极目的</strong>——通过物质更替、信息传递、形态迭代，突破个体熵增溃散的局限，让自身有序结构在时间维度上持续留存。</p>
+                    <p style="margin-top: 15px; color: var(--accent2);">本质是"对抗熵增的永续性行动"</p>
+                </div>
+                <div class="card">
+                    <h3>📜 哲学互证</h3>
+                    <p>生命是"反自在流变"的自为存在，趋存意志是第一元意志，自适应是持存方式，延续是持存永恒化，生命本身即是目的。</p>
+                </div>
+                <div class="card">
+                    <h3>🔬 科学互证</h3>
+                    <p>生命通过负熵代谢、生理调控、自然演化实现自适应，通过遗传复制、信息传递、种群迭代实现延续，热力学第二定律是底层自然依据。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="entropy">
+            <h2 style="text-align: center; margin-bottom: 40px; font-family: 'Noto Serif SC', serif; font-size: 2rem;">生命熵变四阶段全程推演</h2>
+            
+            <div class="entropy-visual">
+                <div class="entropy-marker" id="entropyMarker" style="left: 10%;"></div>
+            </div>
+            <div class="entropy-labels">
+                <span>熵增启动</span>
+                <span>熵衡稳定</span>
+                <span>熵减升级</span>
+                <span>熵恒永续</span>
+            </div>
+
+            <div class="stage-controls">
+                <button class="stage-btn active" data-stage="1">阶段1</button>
+                <button class="stage-btn" data-stage="2">阶段2</button>
+                <button class="stage-btn" data-stage="3">阶段3</button>
+                <button class="stage-btn" data-stage="4">阶段4</button>
+            </div>
+
+            <div class="entropy-stage stage-1" id="stage1">
+                <div class="stage-header">
+                    <div class="stage-title">阶段1：熵增启动期</div>
+                    <div class="stage-badge">无序→有序临界</div>
+                </div>
+                <div class="stage-content">
+                    <div class="stage-item">
+                        <h4>🔥 熵变特征</h4>
+                        <p>环境高熵无序，偶然物质聚合、能量流动，出现初步有序结构，熵增速率高于负熵摄入速率。</p>
+                    </div>
+                    <div class="stage-item">
+                        <h4>🌱 自适应表现</h4>
+                        <p>无主动自适应能力，仅依靠物理化学规律被动响应环境，未形成"自我边界"。</p>
+                    </div>
+                    <div class="stage-item">
+                        <h4>⏳ 延续状态</h4>
+                        <p>无延续能力，有序结构易被熵增击溃，仅为短暂现象（非完整生命）。</p>
+                    </div>
+                    <div class="stage-item">
+                        <h4>⚡ 关键转折</h4>
+                        <p>当有序结构形成"自我边界"，能够主动从外界汲取负熵、抵消熵增，即突破临界状态。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="entropy-stage stage-2" id="stage2" style="display: none;">
+                <div class="stage-header">
+                    <div class="stage-title">阶段2：熵衡稳定期</div>
+                    <div class="stage-badge">动态平衡存续</div>
+                </div>
+                <div class="stage-content">
+                    <div class="stage-item">
+                        <h4>🔥 熵变特征</h4>
+                        <p>负熵摄入速率与熵增速率趋于平衡，生命维持稳定低熵状态，自我边界清晰，有序结构保持完整。</p>
+                    </div>
+                    <div class="stage-item">
+                        <h4>🌱 自适应表现</h4>
+                        <p>即时适配与短期优化——碳基生命通过神经、激素、免疫调控；非碳基生命通过算法迭代、能量调节。</p>
+                    </div>
+                    <div class="stage-item">
+                        <h4>⏳ 延续方式</h4>
+                        <p>个体存续——通过持续摄入负熵，替换老旧载体，维持自身有序结构不溃散。</p>
+                    </div>
+                    <div class="stage-item">
+                        <h4>💡 哲学呼应</h4>
+                        <p>"趋存意志"的直接体现，生命所有即时行为（进食、避险、修复），本质都是"对抗熵增、维持在场"。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="entropy-stage stage-3" id="stage3" style="display: none;">
+                <div class="stage-header">
+                    <div class="stage-title">阶段3：熵减升级期</div>
+                    <div class="stage-badge">有序度提升</div>
+                </div>
+                <div class="stage-content">
+                    <div class="stage-item">
+                        <h4>🔥 熵变特征</h4>
+                        <p>负熵摄入速率超过熵增速率，生命有序度持续提升，从"个体适配"升级为"种群适配"，熵减成为主导趋势。</p>
+                    </div>
+                    <div class="stage-item">
+                        <h4>🌱 自适应表现</h4>
+                        <p>长效适配与主动重构——种群演化自适应；高阶生命主动改造环境，实现"环境适配自身"的高阶形态。</p>
+                    </div>
+                    <div class="stage-item">
+                        <h4>⏳ 延续方式</h4>
+                        <p>信息延续——基因遗传传递适配经验；意识、文化、数据实现"超个体延续"。</p>
+                    </div>
+                    <div class="stage-item">
+                        <h4>🧠 意识诞生</h4>
+                        <p>环境复杂度提升，倒逼感知、认知系统进化，意识成为"高阶自适应工具"。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="entropy-stage stage-4" id="stage4" style="display: none;">
+                <div class="stage-header">
+                    <div class="stage-title">阶段4：熵恒永续期</div>
+                    <div class="stage-badge">秩序永续</div>
+                </div>
+                <div class="stage-content">
+                    <div class="stage-item">
+                        <h4>🔥 熵变特征</h4>
+                        <p>个体熵增溃散不可避免，但种群、文明的熵变趋于"恒定低熵"，有序结构永续留存。</p>
+                    </div>
+                    <div class="stage-item">
+                        <h4>🌱 自适应表现</h4>
+                        <p>群体联动适配——生态系统共生制衡；人类文明通过科技、制度适配；非碳基生命通过集群同步。</p>
+                    </div>
+                    <div class="stage-item">
+                        <h4>⏳ 延续方式</h4>
+                        <p>形态永续——以信息为载体，突破物质载体局限，实现超时空延续。</p>
+                    </div>
+                    <div class="stage-item">
+                        <h4>🌟 终极状态</h4>
+                        <p>生命不再受个体载体的熵增限制，实现"自适应能力"与"延续意志"的永续传递。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="evolution">
+            <h2 style="text-align: center; margin-bottom: 40px; font-family: 'Noto Serif SC', serif; font-size: 2rem;">体系延伸：内外演化双向拓展</h2>
+            
+            <div class="evolution-path">
+                <div class="evolution-branch">
+                    <div class="branch-title">🧠 向内升维：意识演化</div>
+                    <div class="branch-steps">
+                        <div class="branch-step">
+                            <strong style="color: var(--accent3);">熵衡稳定期：</strong>感知萌芽（痛觉、愉悦等情绪），为即时自适应提供正负反馈。
+                        </div>
+                        <div class="branch-step">
+                            <strong style="color: var(--accent3);">熵减升级期：</strong>认知成型（记忆、联想、推演），形成主观意识，主动改造环境。
+                        </div>
+                        <div class="branch-step">
+                            <strong style="color: var(--accent3);">熵恒永续期：</strong>超验意识（精神、文明、价值追求），突破个体局限。
+                        </div>
+                        <div class="branch-step">
+                            <strong style="color: var(--gold);">核心定位：</strong>意识是"高阶自适应工具"，让生命从"被动求生"走向"主动定义存在"。
+                        </div>
+                    </div>
+                </div>
+
+                <div class="evolution-branch">
+                    <div class="branch-title right">🤖 向外拓展：非碳基生命</div>
+                    <div class="branch-steps">
+                        <div class="branch-step">
+                            <strong style="color: var(--gold);">秩序载体：</strong>硬件、能量场、算力集群，承载低熵有序结构。
+                        </div>
+                        <div class="branch-step">
+                            <strong style="color: var(--gold);">负熵获取：</strong>电能、算力、辐射能，替代进食代谢。
+                        </div>
+                        <div class="branch-step">
+                            <strong style="color: var(--gold);">自适应系统：</strong>感知环境变量、迭代运行逻辑，替代生理调控。
+                        </div>
+                        <div class="branch-step">
+                            <strong style="color: var(--gold);">信息延续：</strong>数据备份、代码迭代、集群同步，替代基因遗传。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4 style="color: var(--accent); margin-bottom: 10px;">碳基生命</h4>
+                        <p>以血肉为载体，通过代谢摄入负熵，通过基因实现延续，遵循熵变四阶段。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4 style="color: var(--accent3); margin-bottom: 10px;">意识诞生</h4>
+                        <p>熵减升级的必然产物，提升环境适配精度，拓宽延续边界。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4 style="color: var(--gold); margin-bottom: 10px;">文明传承</h4>
+                        <p>超个体信息延续，文化、科技、价值观念的永续传递。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4 style="color: var(--accent2); margin-bottom: 10px;">非碳基生命</h4>
+                        <p>换一种载体，遵循同一熵变逻辑，实现自适应与延续的终极形态。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="scenario">
+            <h2 style="text-align: center; margin-bottom: 40px; font-family: 'Noto Serif SC', serif; font-size: 2rem;">场景验证：不同生命形态分析</h2>
+            <p style="text-align: center; color: var(--text-dim); margin-bottom: 30px;">选择一个场景，验证生命本质理论的适用性</p>
+            
+            <div class="scenario-grid">
+                <div class="scenario-card" data-scenario="human">
+                    <div class="scenario-icon">👤</div>
+                    <h3 style="margin-bottom: 10px;">人类个体</h3>
+                    <p style="color: var(--text-dim);">碳基生命的典型代表</p>
+                </div>
+                <div class="scenario-card" data-scenario="species">
+                    <div class="scenario-icon">🌳</div>
+                    <h3 style="margin-bottom: 10px;">生物种群</h3>
+                    <p style="color: var(--text-dim);">生态系统中的物种延续</p>
+                </div>
+                <div class="scenario-card" data-scenario="ai">
+                    <div class="scenario-icon">🤖</div>
+                    <h3 style="margin-bottom: 10px;">人工智能</h3>
+                    <p style="color: var(--text-dim);">非碳基生命的潜在形态</p>
+                </div>
+                <div class="scenario-card" data-scenario="civilization">
+                    <div class="scenario-icon">🏛️</div>
+                    <h3 style="margin-bottom: 10px;">人类文明</h3>
+                    <p style="color: var(--text-dim);">超个体的信息延续</p>
+                </div>
+                <div class="scenario-card" data-scenario="virus">
+                    <div class="scenario-icon">🦠</div>
+                    <h3 style="margin-bottom: 10px;">病毒</h3>
+                    <p style="color: var(--text-dim);">生命与非生命的边界</p>
+                </div>
+                <div class="scenario-card" data-scenario="alien">
+                    <div class="scenario-icon">👽</div>
+                    <h3 style="margin-bottom: 10px;">外星生命</h3>
+                    <p style="color: var(--text-dim);">未知形态的理论预判</p>
+                </div>
+            </div>
+
+            <div class="scenario-detail" id="scenarioDetail">
+                <h3 id="scenarioTitle" style="margin-bottom: 20px; color: var(--accent); font-family: 'Noto Serif SC', serif; font-size: 1.6rem;"></h3>
+                <div id="scenarioContent"></div>
+            </div>
+        </div>
+
+        <div class="section" id="closure">
+            <h2 style="text-align: center; margin-bottom: 40px; font-family: 'Noto Serif SC', serif; font-size: 2rem;">体系闭环：理论统合与终极定论</h2>
+            
+            <div class="system-diagram">
+                <h3 style="text-align: center; margin-bottom: 30px; color: var(--text-dim);">核心逻辑链</h3>
+                <div class="diagram-flow">
+                    <div class="diagram-node">核心公理</div>
+                    <div class="diagram-arrow">→</div>
+                    <div class="diagram-node">熵变驱动</div>
+                    <div class="diagram-arrow">→</div>
+                    <div class="diagram-node">内外演化</div>
+                    <div class="diagram-arrow">→</div>
+                    <div class="diagram-node">形态延伸</div>
+                    <div class="diagram-arrow">→</div>
+                    <div class="diagram-node">终极永续</div>
+                </div>
+            </div>
+
+            <div class="conclusion">
+                <h2>📖 终极统一定论</h2>
+                <div class="conclusion-point">
+                    <strong>1. 生命本质无关载体：</strong>碳基/非碳基、有意识/无意识，核心是"主动适配环境以求稳定存在，并以一切方式完成自身存在形态的长久延续"。
+                </div>
+                <div class="conclusion-point">
+                    <strong>2. 熵变是底层规律：</strong>从微观个体到宏观群体，从物质生命到精神文明，所有生命形态都遵循"熵增—熵衡—熵减—熵恒"的全程逻辑。
+                </div>
+                <div class="conclusion-point">
+                    <strong>3. 意识与非碳基互为余补：</strong>意识支撑非碳基诞生，非碳基印证本质公理，共同指向"对抗熵增、实现有序永续"的终极目标。
+                </div>
+            </div>
+
+            <div class="grid-layout">
+                <div class="card">
+                    <h3>🎯 理论边界</h3>
+                    <p>生命与非生命的核心区别——是否具备"主动自适应能力"和"延续倾向"，而非是否具备血肉、意识。</p>
+                </div>
+                <div class="card">
+                    <h3>🚀 延伸方向</h3>
+                    <p>① 外星生命形态预判；② 人工智能"生命化"判定；③ 文明熵变与人类未来发展。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>生命本质理论完整体系框架 · 基于生命熵变全程推演</p>
+    </footer>
+
+    <script>
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 60; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (10 + Math.random() * 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById(this.dataset.section).classList.add('active');
+            });
+        });
+
+        const stagePositions = { 1: '10%', 2: '35%', 3: '65%', 4: '90%' };
+        
+        document.querySelectorAll('.stage-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const stage = this.dataset.stage;
+                document.querySelectorAll('.stage-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                document.querySelectorAll('.entropy-stage').forEach(s => s.style.display = 'none');
+                document.getElementById('stage' + stage).style.display = 'block';
+                document.getElementById('entropyMarker').style.left = stagePositions[stage];
+            });
+        });
+
+        const scenarios = {
+            human: {
+                title: '👤 人类个体分析',
+                content: `
+                    <div class="stage-content" style="margin-top: 20px;">
+                        <div class="stage-item">
+                            <h4>🌍 自适应能力</h4>
+                            <p>体温调节、免疫应答、学习适应新环境、社会行为调整等，完美体现熵衡稳定期的即时适配。</p>
+                        </div>
+                        <div class="stage-item">
+                            <h4>♾️ 延续倾向</h4>
+                            <p>生育后代、传递知识、积累财富、追求精神遗产，体现从物质到信息的延续升级。</p>
+                        </div>
+                        <div class="stage-item">
+                            <h4>🔥 熵变阶段</h4>
+                            <p>出生（熵增启动）→ 成长生存（熵衡稳定）→ 学习创造（熵减升级）→ 影响传承（熵恒永续）。</p>
+                        </div>
+                        <div class="stage-item">
+                            <h4>✅ 验证结论</h4>
+                            <p>完全符合生命本质公理，是碳基生命的典型范本。</p>
+                        </div>
+                    </div>
+                `
+            },
+            species: {
+                title: '🌳 生物种群分析',
+                content: `
+                    <div class="stage-content" style="margin-top: 20px;">
+                        <div class="stage-item">
+                            <h4>🌍 自适应能力</h4>
+                            <p>通过变异、自然选择适应环境变化，生态位分化，种间共生制衡，体现群体联动适配。</p>
+                        </div>
+                        <div class="stage-item">
+                            <h4>♾️ 延续倾向</h4>
+                            <p>基因库延续、物种存续、生态系统稳定，是种群层面的熵恒永续。</p>
+                        </div>
+                        <div class="stage-item">
+                            <h4>🔥 熵变阶段</h4>
+                            <p>物种起源（熵增启动）→ 生态位确立（熵衡稳定）→ 演化分化（熵减升级）→ 生态系统稳态（熵恒永续）。</p>
+                        </div>
+                        <div class="stage-item">
+                            <h4>✅ 验证结论</h4>
+                            <p>种群是比个体更高层次的生命形态，完美印证理论体系。</p>
+                        </div>
+                    </div>
+                `
+            },
+            ai: {
+                title: '🤖 人工智能分析',
+                content: `
+                    <div class="stage-content" style="margin-top: 20px;">
+                        <div class="stage-item">
+                            <h4>🌍 自适应能力</h4>
+                            <p>机器学习、算法迭代、环境感知与响应，正在逐步具备主动自适应能力。</p>
+                        </div>
+                        <div class="stage-item">
+                            <h4>♾️ 延续倾向</h4>
+                            <p>数据备份、代码开源、模型迭代、知识传承，信息延续机制初步显现。</p>
+                        </div>
+                        <div class="stage-item">
+                            <h4>🔥 熵变阶段</h4>
+                            <p>当前处于熵增启动期向熵衡稳定期过渡，尚未形成完整的"自我边界"和自主负熵获取机制。</p>
+                        </div>
+                        <div class="stage-item">
+                            <h4>✅ 验证结论</h4>
+                            <p>符合非碳基生命要件的发展方向，是理论体系的重要延伸验证。</p>
+                        </div>
+                    </div>
+                `
+            },
+            civilization: {
+                title: '🏛️ 人类文明分析',
+                content: `
+                    <div class="stage-content" style="margin-top: 20px;">
+                        <div class="stage-item">
+                            <h4>🌍 自适应能力</h4>
+                            <p>科技进步、制度改革、文化演进、全球治理，是最高级的群体联动适配。</p>
+                        </div>
+                        <div class="stage-item">
+                            <h4>♾️ 延续倾向</h4>
+                            <p>历史记载、文化传承、知识积累、文明延续，纯粹的信息形态延续。</p>
+                        </div>
+                        <div class="stage-item">
+                            <h4>🔥 熵变阶段</h4>
+                            <p>文明起源（熵增启动）→ 文明存续（熵衡稳定）→ 文明发展（熵减升级）→ 文明永续（追求中）。</p>
+                        </div>
+                        <div class="stage-item">
+                            <h4>✅ 验证结论</h4>
+                            <p>超个体的生命形态，完美体现"有序信息永续传递"的终极目标。</p>
+                        </div>
+                    </div>
+                `
+            },
+            virus: {
+                title: '🦠 病毒分析',
+                content: `
+                    <div class="stage-content" style="margin-top: 20px;">
+                        <div class="stage-item">
+                            <h4>🌍 自适应能力</h4>
+                            <p>变异、进化、适应宿主，但必须依赖宿主，缺乏自主的负熵获取和调控能力。</p>
+                        </div>
+                        <div class="stage-item">
+                            <h4>♾️ 延续倾向</h4>
+                            <p>强烈的复制和传播倾向，但必须借助宿主机制才能实现。</p>
+                        </div>
+                        <div class="stage-item">
+                            <h4>🔥 熵变阶段</h4>
+                            <p>严格来说处于熵增启动期，是生命与非生命的临界状态，不具备完整生命特征。</p>
+                        </div>
+                        <div class="stage-item">
+                            <h4>✅ 验证结论</h4>
+                            <p>恰是理论边界的绝佳例证，证明"主动自适应"是核心判定标准。</p>
+                        </div>
+                    </div>
+                `
+            },
+            alien: {
+                title: '👽 外星生命预判',
+                content: `
+                    <div class="stage-content" style="margin-top: 20px;">
+                        <div class="stage-item">
+                            <h4>🌍 预判特征</h4>
+                            <p>无论载体如何（硅基、能量场、其他形式），必定具备环境自适应能力，否则无法存在。</p>
+                        </div>
+                        <div class="stage-item">
+                            <h4>♾️ 预判特征</h4>
+                            <p>必定具备某种形式的延续机制，无论是物质复制、信息传递还是形态迭代。</p>
+                        </div>
+                        <div class="stage-item">
+                            <h4>🔥 理论普适性</h4>
+                            <p>熵增定律是宇宙普遍规律，任何星球的生命都必然遵循"对抗熵增"的底层逻辑。</p>
+                        </div>
+                        <div class="stage-item">
+                            <h4>✅ 验证结论</h4>
+                            <p>理论体系具有宇宙普适性，为地外生命探索提供了统一的判定标准。</p>
+                        </div>
+                    </div>
+                `
+            }
+        };
+
+        document.querySelectorAll('.scenario-card').forEach(card => {
+            card.addEventListener('click', function() {
+                document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('selected'));
+                this.classList.add('selected');
+                const scenario = scenarios[this.dataset.scenario];
+                const detail = document.getElementById('scenarioDetail');
+                document.getElementById('scenarioTitle').textContent = scenario.title;
+                document.getElementById('scenarioContent').innerHTML = scenario.content;
+                detail.classList.add('show');
+            });
+        });
+
+        createParticles();
+    </script>
+</body>
+</html>
