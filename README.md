@@ -21,17 +21,54 @@
 - 📤 **数据导出与分享**: 图片、报告、链接生成
 
 ### AI集成
-- DeepSeek API 文本分析
-- 阿里云百炼 API
-- Google 搜索 API
-- SerpAPI 联网搜索
+- 🌐 **本地 Ollama 支持**: 完全本地化的 AI 对话和分析
+- ☁️ **DeepSeek API 文本分析**
+- ☁️ **阿里云百炼 API**
+- 🔍 **Google 搜索 API**
+- 🔍 **SerpAPI 联网搜索**
 
 ## 快速开始
 
-### 环境要求
-- Docker >= 20.10
-- Docker Compose >= 2.0
-- Node.js >= 20.0 (如需本地开发)
+### Ollama 本地 AI 配置（推荐）
+
+本项目优先支持本地 Ollama AI 服务，无需联网即可使用！
+
+#### 1. 安装 Ollama
+
+访问 [Ollama 官网](https://ollama.ai/) 下载并安装 Ollama。
+
+#### 2. 下载模型
+
+```bash
+# 下载 Llama 3（推荐用于聊天）
+ollama pull llama3:8b
+
+# 下载嵌入模型（用于向量化）
+ollama pull nomic-embed-text
+
+# 可选：其他模型
+ollama pull qwen3:0.6b    # 轻量快速
+ollama pull gemma4:latest  # Google 的模型
+```
+
+#### 3. 配置后端
+
+```bash
+cd backend
+
+# 复制配置示例
+cp .env.example .env
+
+# 编辑 .env 文件，确保以下配置：
+# AI_PROVIDER=ollama
+# OLLAMA_API_URL=http://localhost:11434
+# OLLAMA_CHAT_MODEL=llama3:8b
+# OLLAMA_EMBEDDING_MODEL=nomic-embed-text
+```
+
+#### 4. 启动 Ollama 服务
+
+确保 Ollama 在后台运行（默认端口 11434）。
 
 ### 使用 Docker 启动
 
@@ -77,6 +114,7 @@ npm start
 ```
 .
 ├── .env                    # 环境变量配置
+├── .env.example            # 环境变量配置示例
 ├── docker-compose.yml       # Docker 配置
 ├── backend/                # 后端服务
 │   ├── server.js           # 入口文件
@@ -84,36 +122,39 @@ npm start
 │   ├── config/             # 配置文件
 │   │   └── database.js     # 数据库配置
 │   ├── models/             # 数据模型
-│   │   ├── index.js        # 模型入口
-│   │   ├── Case.js         # 案例模型
-│   │   ├── User.js         # 用户模型
-│   │   ├── Verification.js # 验证模型
-│   │   ├── Simulation.js   # 模拟模型
-│   │   └── KnowledgeNode.js # 知识节点模型
 │   ├── routes/             # API 路由
-│   │   ├── index.js        # 路由入口
-│   │   ├── cases.js        # 案例 API
-│   │   ├── verifications.js # 验证 API
-│   │   ├── simulations.js  # 模拟 API
-│   │   ├── knowledge.js    # 知识图谱 API
-│   │   ├── ai.js           # AI API
-│   │   ├── search.js       # 搜索 API
-│   │   └── auth.js         # 认证 API
+│   │   ├── ai-config.js    # AI 配置 API
+│   │   └── deep-analysis.js # 深度分析 API
+│   ├── services/           # 业务服务
+│   │   ├── ollama.js       # Ollama 本地 AI 服务
+│   │   ├── aiServiceManager.js # AI 服务管理器
+│   │   └── configManager.js # 配置管理器
+│   ├── .env.example        # 后端环境变量示例
 │   └── Dockerfile          # 后端 Dockerfile
 ├── frontend/               # 前端应用
 │   ├── package.json        # 依赖配置
+│   ├── .env.example        # 前端环境变量示例
 │   └── Dockerfile          # 前端 Dockerfile
 ├── docker/                 # Docker 资源
-│   └── postgres/           # PostgreSQL 初始化
-│       └── init.sql        # 初始化脚本
 ├── scripts/                # 辅助脚本
-│   └── validate-env.js     # 环境变量验证
 └── README.md               # 项目说明
 ```
 
 ## API 接口
 
-### 案例管理
+### Ollama AI 服务
+- `GET /api/ai-config/config` - 获取 AI 配置
+- `POST /api/ai-config/models` - 设置 AI 模型配置
+- `GET /api/ai-config/ollama/status` - 检查 Ollama 服务状态
+- `GET /api/ai-config/ollama/models` - 获取 Ollama 可用模型列表
+- `POST /api/ai/chat` - AI 聊天（支持 Ollama）
+- `POST /api/ai/analyze` - AI 深度分析（支持 Ollama）
+
+### 深度分析
+- `GET /api/deep-analysis/sessions` - 获取分析会话列表
+- `POST /api/deep-analysis/sessions` - 创建分析会话
+- `POST /api/deep-analysis/sessions/:id/analyze` - 执行深度分析（流式）
+- `GET /api/deep-analysis/sessions/:id/history` - 获取会话历史
 - `GET /api/cases` - 获取案例列表
 - `POST /api/cases` - 创建案例
 - `GET /api/cases/:id` - 获取单个案例
